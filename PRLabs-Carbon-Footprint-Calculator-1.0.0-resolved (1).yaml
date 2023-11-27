@@ -1,0 +1,194 @@
+---
+openapi: 3.0.0
+info:
+  title: Carbon Footprint Calculator API
+  description: This is a Carbon Footprint Calculator API
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/PRLabs/Carbon-Footprint-Calculator/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Carbon Footprint
+  description: Operations on Carbon Footprint Calculations
+paths:
+  /item:
+    get:
+      tags:
+      - Carbon Footprint
+      summary: Calculates the Carbon Footprint
+      description: |
+        By passing in the appropriate options, you can calculate the carbon footprint
+        for available items in the system
+      operationId: calculateCarbonFootprint
+      parameters:
+      - name: sku_code
+        in: query
+        description: pass the sku code of the Item
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: upc_ean
+        in: query
+        description: pass the UPC/EAN of the Item
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: hsn
+        in: query
+        description: pass the HS number/code of the Item
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: quantity
+        in: query
+        description: quantity of the item
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 1
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        "200":
+          description: Calculated Carbon Footprint of the Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarbonFootprintItemResult'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - Carbon Footprint
+      summary: adds an item to the Carbon Footprint Calculator system
+      description: Adds a item to the Carbon Footprint Calculator system
+      operationId: addCarbonFootprintItem
+      requestBody:
+        description: Item to be added to the Carbon Footprint Calculator system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarbonFootprintItem'
+      responses:
+        "201":
+          description: item added
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: an existing item already exists
+components:
+  schemas:
+    CarbonFootprintItem:
+      required:
+      - hsn
+      - sku_code
+      - upc_ean
+      type: object
+      properties:
+        sku_code:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        upc_ean:
+          type: string
+          example: "123456789"
+        hsn:
+          type: string
+          example: "123456"
+        product_name:
+          type: string
+          example: Product Name
+        product_description:
+          type: string
+          example: Product Description
+        manufacturer_name:
+          type: string
+          example: Manufacturer Name
+        brand:
+          type: string
+          example: Brand
+        country_of_origin:
+          type: string
+          example: Widget Adapter
+        l0_domain:
+          type: string
+          example: Level 0 Domain
+        l1_sub_domain:
+          type: string
+          example: Level 1 Sub-Domain
+        l2_category:
+          type: string
+          example: Level 2 Category
+        l3_sub_vategory:
+          type: string
+          example: Level 3 Sub-Category
+        l4_product_enum_code:
+          type: string
+          example: Level 4 Product Enum Code
+        product_quantity:
+          type: integer
+          format: int32
+          example: 1
+        uom:
+          type: string
+          example: Units
+        net_quantity:
+          type: integer
+          format: int32
+          example: 10
+        pack_quantity:
+          type: integer
+          format: int32
+          example: 1
+        pack_size:
+          type: string
+          example: Pack of 1
+        mrp:
+          type: integer
+          format: float
+        price:
+          type: integer
+          format: float
+    CarbonFootprintItemResult:
+      required:
+      - hsn
+      - sku_code
+      - upc_ean
+      type: object
+      properties:
+        sku_code:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        upc_ean:
+          type: string
+          example: "123456789"
+        hsn:
+          type: string
+          example: "123456"
+        product_name:
+          type: string
+          example: Product Name
+        manufacturer_name:
+          type: string
+          example: Manufacturer Name
+        brand:
+          type: string
+          example: Brand
+        co2_equ:
+          type: integer
+          format: float
+        validFromDate:
+          type: string
+          format: date-time
+          example: 2023-08-29T09:12:33.001Z
+        validTillDate:
+          type: string
+          format: date-time
+          example: 2025-08-29T09:12:33.001Z
